@@ -21,9 +21,11 @@ const Container = styled.div`
 `;
 
 const AlertContainer = styled.div`
-  width: ${(props) => (props.windowW > 415 ? "20%" : "60%")};
-  margin-left: ${(props) => (props.windowW > 415 ? "40%" : "20%")};
+  width: 100%;
+  display: flex;
+  justify-content: center;
   padding-top: 50px;
+  align-items: center;
 `;
 
 const TitleContainer = styled.div`
@@ -47,7 +49,11 @@ const TextInp = styled(TextField)`
   padding: 10px 0 10px 0;
 `;
 
-const Signup = () => {
+const ButtonContainer = styled.div`
+  padding-top: 20px;
+`;
+
+const Signup = (props) => {
   const [isAlertVisible, setAlertStatus] = React.useState(false);
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
   const handleSubmit = React.useCallback(async () => {
@@ -57,14 +63,12 @@ const Signup = () => {
       console.log(username, password);
       const data = await Interceptor("", "POST", { username, password });
       if (data[0] === 400) return setAlertStatus(true);
+      props.history.push("/flashcards");
     } catch (e) {
       console.error(e);
     }
-  }, []);
+  }, [props.history]);
 
-  React.useEffect(() => {
-    console.log(windowWidth);
-  }, [windowWidth]);
   React.useEffect(() => {
     window.addEventListener("resize", () => setWindowWidth(window.innerWidth));
     return () =>
@@ -97,9 +101,9 @@ const Signup = () => {
               placeholder="Enter password"
             />
 
-            <div style={{ paddingTop: "20px" }}>
+            <ButtonContainer>
               <Button onClick={handleSubmit}>Sign In</Button>
-            </div>
+            </ButtonContainer>
           </CardContainer>
         </Card>
       </Container>
@@ -108,7 +112,7 @@ const Signup = () => {
         <Alert
           rounded
           closable
-          windowW={windowWidth}
+          width={"20%"}
           type="error"
           border="left"
           visible={isAlertVisible}
